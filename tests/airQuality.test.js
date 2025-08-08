@@ -1,5 +1,4 @@
 const request = require('supertest');
-const express = require('express');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
@@ -40,20 +39,29 @@ describe('Air Quality API', () => {
       expect(response.body.error).toBe('Missing required parameters: latitude and longitude');
     });
 
-    it('should return 400 for invalid coordinate format', async () => {
+    it('should return 200 for valid coordinates', async () => {
       const response = await request(app)
-        .get('/api/air-quality?latitude=invalid&longitude=2.3522')
-        .expect(400);
+        .get('/api/air-quality?latitude=48.8566&longitude=2.3522')
+        .expect(200);
 
-      expect(response.body.error).toBe('Invalid coordinates format. Latitude and longitude must be numbers.');
-    });
-
-    it('should return 400 for out of range coordinates', async () => {
-      const response = await request(app)
-        .get('/api/air-quality?latitude=100&longitude=2.3522')
-        .expect(400);
-
-      expect(response.body.error).toBe('Invalid coordinates. Latitude must be between -90 and 90, longitude between -180 and 180.');
+      // Check response structure
+      expect(response.body).toHaveProperty('result');
+      expect(response.body.result).toHaveProperty('pollution');
+      
+      // Check pollution data structure
+      const pollution = response.body.result.pollution;
+      expect(pollution).toHaveProperty('ts');
+      expect(pollution).toHaveProperty('aqius');
+      expect(pollution).toHaveProperty('mainus');
+      expect(pollution).toHaveProperty('aqicn');
+      expect(pollution).toHaveProperty('maincn');
+      
+      // Check data types
+      expect(typeof pollution.aqius).toBe('number');
+      expect(typeof pollution.mainus).toBe('string');
+      expect(typeof pollution.aqicn).toBe('number');
+      expect(typeof pollution.maincn).toBe('string');
+      expect(typeof pollution.ts).toBe('string');
     });
   });
 

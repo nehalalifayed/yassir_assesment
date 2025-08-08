@@ -7,7 +7,6 @@ var mongoose = require('mongoose');
 var config = require('./config');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
 var airQualityRouter = require('./routes/airQuality');
 
 var app = express();

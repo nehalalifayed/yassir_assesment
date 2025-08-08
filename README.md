@@ -10,11 +10,7 @@ A Node.js REST API for monitoring air quality using the IQAir API. The applicati
 
 ## Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/nehalalifayed/yassir_assesment.git
-cd yassir_assesment
-```
+1. Download the code
 
 2. Install dependencies:
 ```bash
@@ -29,12 +25,6 @@ npm install
 ```bash
 npm start
 ```
-
-The application will automatically:
-- Connect to MongoDB
-- Start the Paris air quality monitoring CRON job (runs every minute)
-- Begin accepting API requests
-
 ## API Endpoints
 
 ### 1. Get Air Quality for Coordinates
@@ -42,8 +32,8 @@ The application will automatically:
 **Endpoint:** `GET /api/air-quality`
 
 **Query Parameters:**
-- `latitude` (required): Latitude coordinate (-90 to 90)
-- `longitude` (required): Longitude coordinate (-180 to 180)
+- `latitude` (required): Latitude coordinate
+- `longitude` (required): Longitude coordinate
 
 **Example Request:**
 ```bash
@@ -156,20 +146,11 @@ npm test
 npm run test:watch
 ```
 
-### Test Coverage
-
-The test suite includes:
-
-- **Unit Tests**: Service layer testing with mocked dependencies
-- **Integration Tests**: API endpoint testing with in-memory MongoDB
-- **Coverage Reports**: HTML and text coverage reports
-
 ### Test Structure
 
 ```
 tests/
 ├── setup.js              # Global test configuration
-├── iqairService.test.js  # Unit tests for IQAir service
 └── airQuality.test.js    # Integration tests for API endpoints
 ```
 
@@ -183,73 +164,3 @@ The application uses the following configuration (in `config.js`):
 - `MONGODB_URI`: MongoDB connection string
 - `NODE_ENV`: Environment mode
 - `PARIS_COORDS`: Paris coordinates for monitoring
-
-### Database Indexes
-
-The application creates optimized indexes for:
-- Location-based queries (latitude, longitude, timestamp)
-- Air quality ranking (AQI US descending)
-
-## Error Handling
-
-The API includes comprehensive error handling:
-
-- **Validation Errors**: Invalid parameters return 400 status
-- **API Errors**: IQAir API failures return 500 status
-- **Database Errors**: MongoDB connection issues are logged
-- **Network Errors**: Connection timeouts and network issues
-
-## Monitoring and Logging
-
-- **Console Logging**: Application startup and CRON job activity
-- **Error Logging**: Detailed error messages for debugging
-- **Database Logging**: Connection status and query errors
-
-## Performance Considerations
-
-- **Database Indexes**: Optimized for common query patterns
-- **Connection Pooling**: MongoDB connection reuse
-- **Error Recovery**: Graceful handling of API failures
-- **Memory Management**: Proper cleanup of resources
-
-## Security
-
-- **Input Validation**: All parameters are validated
-- **Error Sanitization**: Sensitive information is not exposed
-- **Rate Limiting**: Consider implementing for production use
-
-## Deployment
-
-### Production Considerations
-
-1. **Environment Variables**: Use proper environment variable management
-2. **Database**: Use production MongoDB instance
-3. **Monitoring**: Implement proper logging and monitoring
-4. **Rate Limiting**: Add rate limiting for API endpoints
-5. **SSL/TLS**: Use HTTPS in production
-6. **Process Management**: Use PM2 or similar for process management
-
-### Docker Deployment
-
-```dockerfile
-FROM node:16-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci --only=production
-COPY . .
-EXPOSE 3000
-CMD ["npm", "start"]
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
